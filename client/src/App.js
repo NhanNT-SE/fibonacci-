@@ -7,6 +7,7 @@ function App() {
   return (
     <Router>
       <div>
+        <h1>Fib Calculator</h1>
         <nav>
           <ul>
             <li>
