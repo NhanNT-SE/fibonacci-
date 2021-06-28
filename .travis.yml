@@ -18,14 +18,14 @@ after_success:
   - docker push nhannt1905/fib-nginx
   - docker push nhannt1905/fib-server
   - docker push nhannt1905/fib-worker
-# deploy:
-#   provider: elasticbeanstalk
-#   region: "us-east-2"
-#   app: "basic-deploy-frontend"
-#   env: "Basicdeployfrontend-env"
-#   bucket_name: "elasticbeanstalk-us-east-2-717703241035"
-#   bucket_path: "basic-deploy-frontend"
-#   on:
-#     branch: main
-#   access_key_id: $AWS_ACCESS_KEY
-#   secret_access_key: $AWS_SECRET_KEY
+deploy:
+  provider: elasticbeanstalk
+  region: "us-east-2"
+  app: "multi-docker"
+  env: "Multidocker-env"
+  bucket_name: "elasticbeanstalk-us-east-2-717703241035"
+  bucket_path: "multi-docker"
+  on:
+    branch: main
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
