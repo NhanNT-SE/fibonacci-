@@ -5,27 +5,31 @@ services:
 before_install:
   - docker build -t nhannt1905/client-test -f ./client/Dockerfile.dev ./client
 script:
-  - docker run -e CI=true nhannt1905/client-test npm run test -- --coverage
-after_success:
-  - docker build -t nhannt1905/fib-client ./client
-  - docker build -t nhannt1905/fib-nginx ./nginx
-  - docker build -t nhannt1905/fib-server ./server
-  - docker build -t nhannt1905/fib-worker ./worker
-  # Login docker
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
-  # Push all images to docker hub
-  - docker push nhannt1905/fib-client
-  - docker push nhannt1905/fib-nginx
-  - docker push nhannt1905/fib-server
-  - docker push nhannt1905/fib-worker
-deploy:
-  provider: elasticbeanstalk
-  region: "us-east-2"
-  app: "multi-docker"
-  env: "Multidocker-env"
-  bucket_name: "elasticbeanstalk-us-east-2-717703241035"
-  bucket_path: "multi-docker"
-  on:
-    branch: main
-  access_key_id: $AWS_ACCESS_KEY
-  secret_access_key: $AWS_SECRET_KEY
+  - openssl aes-256-cbc -K $encrypted_9f3b5599b056_key -iv $encrypted_9f3b5599b056_iv -in service-account.json.enc -out service-account.json -d
+  - curl https://sdk.cloud.google.com | bash > /dev/null
+  - source $HOME/google-cloud-sdk/path.bash.inc
+  - gcloud components update kubectl
+  - gcloud auth active-service-account --key-file service-account.json
+# after_success:
+#   - docker build -t nhannt1905/fib-client ./client
+#   - docker build -t nhannt1905/fib-nginx ./nginx
+#   - docker build -t nhannt1905/fib-server ./server
+#   - docker build -t nhannt1905/fib-worker ./worker
+#   # Login docker
+#   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+#   # Push all images to docker hub
+#   - docker push nhannt1905/fib-client
+#   - docker push nhannt1905/fib-nginx
+#   - docker push nhannt1905/fib-server
+#   - docker push nhannt1905/fib-worker
+# deploy:
+#   provider: elasticbeanstalk
+#   region: "us-east-2"
+#   app: "multi-docker"
+#   env: "Multidocker-env"
+#   bucket_name: "elasticbeanstalk-us-east-2-717703241035"
+#   bucket_path: "multi-docker"
+#   on:
+#     branch: main
+#   access_key_id: $AWS_ACCESS_KEY
+#   secret_access_key: $AWS_SECRET_KEY
